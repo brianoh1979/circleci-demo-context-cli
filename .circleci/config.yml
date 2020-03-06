@@ -81,3 +81,4 @@ jobs:
             $VCS \
             $CIRCLE_PROJECT_USERNAME \
             test-context
+          when: always
