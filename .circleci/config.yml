@@ -27,8 +27,7 @@ jobs:
       - circleci-cli/install # Installs latest CLI
       - run:
           name: Check CIRCLE_TOKEN set
-          command: |
-            [ -z $CIRCLE_TOKEN ] || echo "CIRCLE_TOKEN not set, exiting" && exit 1
+          command: [ -z $CIRCLE_TOKEN ] || exit 1
       - run:
           name: List current contexts
           command: |
