@@ -1,0 +1,23 @@
+#############
+# Common Defs
+#############
+version: 2.1
+
+############
+# Workflows
+############
+workflows:
+  version: 2
+  example:
+    jobs:
+      - context-create
+
+##################
+# Job Definitions
+##################
+jobs:
+  context-create:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: circleci version
