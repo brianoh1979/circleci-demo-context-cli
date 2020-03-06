@@ -39,49 +39,49 @@ jobs:
             --token $CIRCLE_TOKEN
       - run:
           name: Create test context 
-          command: >
-            circleci context create  # Base command
-            $VCS                     # VCS Type
-            $CIRCLE_PROJECT_USERNAME # Org name
-            test-context             # Name of context
-            --token $CIRCLE_TOKEN    # API token
+          command: |
+            circleci context create \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME \
+            test-context \
+            --token $CIRCLE_TOKEN
       - run:
           name: Create secret in test context
-          command: >
-            echo "TEST_VALUE" |           # Pipe new secret value from stdin
-            circleci context store-secret # Base command
-            $VCS                          # VCS Type (github or bitbucket)
-            $CIRCLE_PROJECT_USERNAME      # Org name
-            test-context                  # Name of context
-            TEST_SECRET                   # Name of secret you're creating
+          command: |
+            echo "TEST_VALUE" | \
+            circleci context store-secret \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME \
+            test-context \
+            TEST_SECRET
       - run:
           name: Show context (doesn't print values)
           command: |
-            circleci context show    # Base command
-            $VCS                     # VCS Type (github or bitbucket)
-            $CIRCLE_PROJECT_USERNAME # Org name
-            test-context             # Name of context
+            circleci context show \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME \
+            test-context
       - run:
           name: Remove the secret from the context
           command: |
-            circleci context remove-secret # Base command
-            $VCS                           # VCS Type (github or bitbucket)
-            $CIRCLE_PROJECT_USERNAME       # Org name
-            test-context                   # Name of context
-            TEST_SECRET                    # Name of secret you're removing
+            circleci context remove-secret \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME \
+            test-context \
+            TEST_SECRET
       - run:
           name: Show context again
           command: |
-            circleci context show    # Base command
-            $VCS                     # VCS Type (github or bitbucket)
-            $CIRCLE_PROJECT_USERNAME # Org name
-            test-context             # Name of context
+            circleci context show \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME \
+            test-context
       - run:
           name: Delete test context 
           command: |
-            circleci context delete -f # Base command, -f omits asking for confirmation
-            $VCS                       # VCS Type
-            $CIRCLE_PROJECT_USERNAME   # Org name
-            test-context               # Name of context
-            --token $CIRCLE_TOKEN      # API token
+            circleci context delete -f \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME \
+            test-context \
+            --token $CIRCLE_TOKEN
 
