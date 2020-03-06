@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Check CIRCLE_TOKEN set
           command: |
-            [ -z $CIRCLE_TOKEN ] || exit 1
+            [ -z $CIRCLE_TOKEN ] && exit 1
       - run:
           name: List current contexts
           command: |
