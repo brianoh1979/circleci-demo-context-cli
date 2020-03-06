@@ -37,14 +37,25 @@ jobs:
             $VCS \
             $CIRCLE_PROJECT_USERNAME
       - run:
-          name: Create test context 
+          name: Create test context, show again for confirmation
           command: |
             circleci context create \
             $VCS \
             $CIRCLE_PROJECT_USERNAME \
             test-context
+
+            circleci context list \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME
       - run:
-          name: Create secret in test context
+          name: Show vars in context, should be empty
+          command: |
+            circleci context show \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME \
+            test-context
+      - run:
+          name: Create secret in test context, show again for confirmation
           command: |
             echo "TEST_VALUE" | \
             circleci context store-secret \
@@ -52,9 +63,7 @@ jobs:
             $CIRCLE_PROJECT_USERNAME \
             test-context \
             TEST_SECRET
-      - run:
-          name: Show context (doesn't print values)
-          command: |
+
             circleci context show \
             $VCS \
             $CIRCLE_PROJECT_USERNAME \
@@ -73,10 +82,14 @@ jobs:
             $CIRCLE_PROJECT_USERNAME \
             test-context
       - run:
-          name: Delete test context 
+          name: Delete test context, show again to confirm
           command: |
             circleci context delete -f \
             $VCS \
             $CIRCLE_PROJECT_USERNAME \
             test-context
+
+            circleci context list \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME
           when: always
