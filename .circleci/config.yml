@@ -25,26 +25,24 @@ jobs:
           VCS: github
     steps:
       - circleci-cli/install # Installs latest CLI
+      - circleci-cli/setup
       - run:
-          name: Check required vars set
+          name: Check other required vars set
           command: |
-            [ -z $CIRCLE_TOKEN ] && exit 1 || echo "CIRCLE_TOKEN set, continuing"
             [ -z $VCS ] && exit 1 || echo "VCS set, continuing"
       - run:
           name: List current contexts
           command: |
             circleci context list \
             $VCS \
-            $CIRCLE_PROJECT_USERNAME \
-            --token $CIRCLE_TOKEN
+            $CIRCLE_PROJECT_USERNAME
       - run:
           name: Create test context 
           command: |
             circleci context create \
             $VCS \
             $CIRCLE_PROJECT_USERNAME \
-            test-context \
-            --token $CIRCLE_TOKEN
+            test-context
       - run:
           name: Create secret in test context
           command: |
@@ -82,6 +80,4 @@ jobs:
             circleci context delete -f \
             $VCS \
             $CIRCLE_PROJECT_USERNAME \
-            test-context \
-            --token $CIRCLE_TOKEN
-
+            test-context
