@@ -4,10 +4,11 @@ Repository showcasing usage of CircleCI's new context CLI functionality.
 
 ## Prerequisites for this example project
 - Need to have the following env variables set, either project-level or context-level:
-Variable           | Description
--------------------|------------------------------------------------------------------------------
-VCS                | Either "github" or "bitbucket"
-CIRCLECI_CLI_TOKEN | A personal API token for CircleCI. User must have org-level/admin permissions
+
+Variable             | Description
+---------------------|------------------------------------------------------------------------------
+`VCS`                | Either "github" or "bitbucket"
+`CIRCLECI_CLI_TOKEN` | A personal API token for CircleCI. User must have org-level/admin permissions
 
 ## What's happening in this example config?
 1. We use the [CircleCI CLI Orb](https://circleci.com/orbs/registry/orb/circleci/circleci-cli) to install the client-side CLI and setup auth with the `CIRCLECI_CLI_TOKEN` variable.
@@ -25,5 +26,12 @@ jobs:
       - circleci-cli/setup
 ```
 
-2. Then we demonstrate the Context CLI functionality in multiple steps. The commands generally follow the following format: `circleci context [FUNCTION] [VCS] [ORG_NAME] [FUNCTION-SPECIFIC_ARGS...]`. Run `circleci context` or `circleci context -h` for more help and information on available commands.
+2. Then we demonstrate the Context CLI functionality in multiple steps. The commands generally follow this format:
 
+```
+circleci context FUNCTION $VCS $CIRCLE_PROJECT_USERNAME [FUNCTION-SPECIFIC_ARGS...]
+```
+
+The current functions available include create/delete of context, and create/delete of variables inside the context. `$VCS` you should have set as a prerequisite, and `$CIRCLE_PROJECT_USERNAME` refers to the org name owning the current project.
+
+Run `circleci context` or `circleci context -h` for more help and information on available commands.
