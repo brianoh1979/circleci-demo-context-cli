@@ -26,16 +26,17 @@ jobs:
     steps:
       - circleci-cli/install # Installs latest CLI
       - run:
-          name: Check CIRCLE_TOKEN set
+          name: Check required vars set
           command: |
-            [ -z $CIRCLE_TOKEN ] && exit 1 || echo "Set, continuing"
+            [ -z $CIRCLE_TOKEN ] && exit 1 || echo "CIRCLE_TOKEN set, continuing"
+            [ -z $VCS ] && exit 1 || echo "VCS set, continuing"
       - run:
           name: List current contexts
           command: |
-            circleci context list \  # Base command
-            $VCS \                   # VCS Type
-            $CIRCLE_PROJECT_USERNAME # Org name whose contexts you want to list
-            --token $CIRCLE_TOKEN    # API token
+            circleci context list \    # Base command
+            $VCS \                     # VCS Type
+            $CIRCLE_PROJECT_USERNAME \ # Org name whose contexts you want to list
+            --token $CIRCLE_TOKEN      # API token
       - run:
           name: Create test context 
           command: |
