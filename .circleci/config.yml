@@ -24,7 +24,7 @@ jobs:
         environment:
           VCS: github
     steps:
-      - cli/install # Installs latest CLI
+      - circleci-cli/install # Installs latest CLI
       - run:
           name: Check CIRCLE_TOKEN set
           command: |
