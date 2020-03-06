@@ -32,11 +32,11 @@ jobs:
             [ -z $VCS ] && exit 1 || echo "VCS set, continuing"
       - run:
           name: List current contexts
-          command: >
-            circleci context list    # Base command
-            $VCS                     # VCS Type
-            $CIRCLE_PROJECT_USERNAME # Org name whose contexts you want to list
-            --token $CIRCLE_TOKEN    # API token
+          command: |
+            circleci context list \
+            $VCS \
+            $CIRCLE_PROJECT_USERNAME \
+            --token $CIRCLE_TOKEN
       - run:
           name: Create test context 
           command: >
@@ -56,14 +56,14 @@ jobs:
             TEST_SECRET                   # Name of secret you're creating
       - run:
           name: Show context (doesn't print values)
-          command: >
+          command: |
             circleci context show    # Base command
             $VCS                     # VCS Type (github or bitbucket)
             $CIRCLE_PROJECT_USERNAME # Org name
             test-context             # Name of context
       - run:
           name: Remove the secret from the context
-          command: >
+          command: |
             circleci context remove-secret # Base command
             $VCS                           # VCS Type (github or bitbucket)
             $CIRCLE_PROJECT_USERNAME       # Org name
@@ -71,14 +71,14 @@ jobs:
             TEST_SECRET                    # Name of secret you're removing
       - run:
           name: Show context again
-          command: >
+          command: |
             circleci context show    # Base command
             $VCS                     # VCS Type (github or bitbucket)
             $CIRCLE_PROJECT_USERNAME # Org name
             test-context             # Name of context
       - run:
           name: Delete test context 
-          command: >
+          command: |
             circleci context delete -f # Base command, -f omits asking for confirmation
             $VCS                       # VCS Type
             $CIRCLE_PROJECT_USERNAME   # Org name
