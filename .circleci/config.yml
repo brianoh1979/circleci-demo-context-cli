@@ -51,11 +51,11 @@ jobs:
             circleci context store-secret $VCS $CIRCLE_PROJECT_USERNAME test-context2 TEST_SECRET
 
             circleci context show $VCS $CIRCLE_PROJECT_USERNAME test-context2
-      - run:
-          name: Remove the secret from the context, show context again to confirm
-          command: |
-            circleci context remove-secret $VCS $CIRCLE_PROJECT_USERNAME test-context2 TEST_SECRET
-            circleci context show $VCS $CIRCLE_PROJECT_USERNAME test-context2
+#      - run:
+#          name: Remove the secret from the context, show context again to confirm
+#          command: |
+#            circleci context remove-secret $VCS $CIRCLE_PROJECT_USERNAME test-context2 TEST_SECRET
+#            circleci context show $VCS $CIRCLE_PROJECT_USERNAME test-context2
  #     - run:
  #         name: Delete test context, show again to confirm
  #         command: |
