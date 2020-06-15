@@ -1,4 +1,5 @@
 # Orb 'circleci/circleci-cli@0.1.7' resolved to 'circleci/circleci-cli@0.1.7'
+#Putting in comment to trigger commit
 version: 2
 jobs:
   context-cli-test:
@@ -43,7 +44,7 @@ jobs:
     - run:
         command: |
           circleci setup --no-prompt \
-            --host https://circleci.ohalloran.eu \
+            --host https://circleci.com \
             --token $CIRCLECI_CLI_TOKEN
         name: Configure CircleCI CLI
     - run:
