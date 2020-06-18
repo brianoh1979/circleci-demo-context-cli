@@ -1,147 +1,296 @@
-defaults: &defaults
-  working_directory: ~/watson
-  docker:
-    - image: circleci/node:lts
-
-version: '2.1'
-
+version: 2
 jobs:
-
   install:
-    <<: *defaults
+    working_directory: ~/watson
+    docker:
+    - image: circleci/node:lts
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - npm-build-{{ checksum "package-lock.json" }}
-            - npm-build
-
-      - run:
-          name: Set npm token
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_READ" >> ~/.npmrc
-      - run:
-          name: Install dependencies
-          command: npm ci
-      - save_cache:
-          paths:
-            - node_modules
-          key: npm-build-{{ checksum "package-lock.json" }}
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '*'
-
+    - checkout
+    - restore_cache:
+        keys:
+        - npm-build-{{ checksum "package-lock.json" }}
+        - npm-build
+    - run:
+        name: Set npm token
+        command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_READ" >> ~/.npmrc
+    - run:
+        name: Install dependencies
+        command: npm ci
+    - save_cache:
+        paths:
+        - node_modules
+        key: npm-build-{{ checksum "package-lock.json" }}
+    - persist_to_workspace:
+        root: .
+        paths:
+        - '*'
   test:
-    <<: *defaults
+    working_directory: ~/watson
+    docker:
+    - image: circleci/node:lts
     steps:
-      - attach_workspace:
-          at: ~/watson
-      - run:
-          name: Test
-          command: npm test
-
+    - attach_workspace:
+        at: ~/watson
+    - run:
+        name: Test
+        command: npm test
   lint:
-    <<: *defaults
+    working_directory: ~/watson
+    docker:
+    - image: circleci/node:lts
     steps:
-      - attach_workspace:
-          at: ~/watson
-      - run:
-          name: Lint
-          command: npm run lint
-
-  upload-sourcemaps:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/watson
-      - run:
-          name: Upload sourcemaps
-          command: sh ./.circleci/rollbar_upload_source_maps.sh
-          environment:
-            ROLLBAR_POST_SERVER_ITEM: 8c42d37e91974ed7b28af261631d3037
-
+    - attach_workspace:
+        at: ~/watson
+    - run:
+        name: Lint
+        command: npm run lint
   build-staging:
-    <<: *defaults
+    working_directory: ~/watson
+    docker:
+    - image: circleci/node:lts
     steps:
-      - attach_workspace:
-          at: ~/watson
-      - run:
-          name: Build staging
-          command: npm run build-staging
-      - persist_to_workspace:
-          root: .
-          paths:
-            - 'build'
-
-  build:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/watson
-      - run:
-          name: Build
-          command: npm run build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - 'build'
-
+    - attach_workspace:
+        at: ~/watson
+    - run:
+        name: Build staging
+        command: npm run build-staging
+    - persist_to_workspace:
+        root: .
+        paths:
+        - build
   upload-to-artifactory-staging:
-    <<: *defaults
+    working_directory: ~/watson
+    docker:
+    - image: circleci/node:lts
     steps:
-      - attach_workspace:
-          at: ~/watson
-      - run:
-          name: Upload staging app to artifactory
-          command: npm run release-staging
-
+    - attach_workspace:
+        at: ~/watson
+    - run:
+        name: Upload staging app to artifactory
+        command: npm run release-staging
+  build:
+    working_directory: ~/watson
+    docker:
+    - image: circleci/node:lts
+    steps:
+    - attach_workspace:
+        at: ~/watson
+    - run:
+        name: Build
+        command: npm run build
+    - persist_to_workspace:
+        root: .
+        paths:
+        - build
   upload-to-artifactory:
-    <<: *defaults
+    working_directory: ~/watson
+    docker:
+    - image: circleci/node:lts
     steps:
-      - attach_workspace:
-          at: ~/watson
-      - run:
-          name: Upload production app to artifactory
-          command: npm run release
-
+    - attach_workspace:
+        at: ~/watson
+    - run:
+        name: Upload production app to artifactory
+        command: npm run release
+  upload-sourcemaps:
+    working_directory: ~/watson
+    docker:
+    - image: circleci/node:lts
+    steps:
+    - attach_workspace:
+        at: ~/watson
+    - run:
+        name: Upload sourcemaps
+        command: sh ./.circleci/rollbar_upload_source_maps.sh
+        environment:
+          ROLLBAR_POST_SERVER_ITEM: 8c42d37e91974ed7b28af261631d3037
 workflows:
   version: 2
   install-test-build-upload-to-artifactory:
     jobs:
-      - install:
-          context: frontend-build
-      - test:
-          requires:
-            - install
-      - lint:
-          requires:
-            - install
-      - build-staging:
-          requires:
-            - install
-            - test
-      - upload-to-artifactory-staging:
-          context: frontend-deploy-app
-          requires:
-            - build-staging
-          filters:
-            branches:
-              only: master
-      - build:
-          requires:
-            - install
-            - test
-      - upload-to-artifactory:
-          context: frontend-deploy-app
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
-      - upload-sourcemaps:
-          requires:
-            - upload-to-artifactory
-          filters:
-            branches:
-              only:
-                - master
+    - install:
+        context: frontend-build
+    - test:
+        requires:
+        - install
+    - lint:
+        requires:
+        - install
+    - build-staging:
+        requires:
+        - install
+        - test
+    - upload-to-artifactory-staging:
+        filters:
+          branches:
+            only: master
+        requires:
+        - build-staging
+        context: frontend-deploy-app
+    - build:
+        requires:
+        - install
+        - test
+    - upload-to-artifactory:
+        filters:
+          branches:
+            only: master
+        requires:
+        - build
+        context: frontend-deploy-app
+    - upload-sourcemaps:
+        filters:
+          branches:
+            only:
+            - master
+        requires:
+        - upload-to-artifactory
+
+# Original config.yml file:
+# defaults: &defaults
+#   working_directory: ~/watson
+#   docker:
+#     - image: circleci/node:lts
+# 
+# version: '2.1'
+# 
+# jobs:
+# 
+#   install:
+#     <<: *defaults
+#     steps:
+#       - checkout
+#       - restore_cache:
+#           keys:
+#             - npm-build-{{ checksum \"package-lock.json\" }}
+#             - npm-build
+# 
+#       - run:
+#           name: Set npm token
+#           command: echo \"//registry.npmjs.org/:_authToken=$NPM_TOKEN_READ\" >> ~/.npmrc
+#       - run:
+#           name: Install dependencies
+#           command: npm ci
+#       - save_cache:
+#           paths:
+#             - node_modules
+#           key: npm-build-{{ checksum \"package-lock.json\" }}
+#       - persist_to_workspace:
+#           root: .
+#           paths:
+#             - '*'
+# 
+#   test:
+#     <<: *defaults
+#     steps:
+#       - attach_workspace:
+#           at: ~/watson
+#       - run:
+#           name: Test
+#           command: npm test
+# 
+#   lint:
+#     <<: *defaults
+#     steps:
+#       - attach_workspace:
+#           at: ~/watson
+#       - run:
+#           name: Lint
+#           command: npm run lint
+# 
+#   upload-sourcemaps:
+#     <<: *defaults
+#     steps:
+#       - attach_workspace:
+#           at: ~/watson
+#       - run:
+#           name: Upload sourcemaps
+#           command: sh ./.circleci/rollbar_upload_source_maps.sh
+#           environment:
+#             ROLLBAR_POST_SERVER_ITEM: 8c42d37e91974ed7b28af261631d3037
+# 
+#   build-staging:
+#     <<: *defaults
+#     steps:
+#       - attach_workspace:
+#           at: ~/watson
+#       - run:
+#           name: Build staging
+#           command: npm run build-staging
+#       - persist_to_workspace:
+#           root: .
+#           paths:
+#             - 'build'
+# 
+#   build:
+#     <<: *defaults
+#     steps:
+#       - attach_workspace:
+#           at: ~/watson
+#       - run:
+#           name: Build
+#           command: npm run build
+#       - persist_to_workspace:
+#           root: .
+#           paths:
+#             - 'build'
+# 
+#   upload-to-artifactory-staging:
+#     <<: *defaults
+#     steps:
+#       - attach_workspace:
+#           at: ~/watson
+#       - run:
+#           name: Upload staging app to artifactory
+#           command: npm run release-staging
+# 
+#   upload-to-artifactory:
+#     <<: *defaults
+#     steps:
+#       - attach_workspace:
+#           at: ~/watson
+#       - run:
+#           name: Upload production app to artifactory
+#           command: npm run release
+# 
+# workflows:
+#   version: 2
+#   install-test-build-upload-to-artifactory:
+#     jobs:
+#       - install:
+#           context: frontend-build
+#       - test:
+#           requires:
+#             - install
+#       - lint:
+#           requires:
+#             - install
+#       - build-staging:
+#           requires:
+#             - install
+#             - test
+#       - upload-to-artifactory-staging:
+#           context: frontend-deploy-app
+#           requires:
+#             - build-staging
+#           filters:
+#             branches:
+#               only: master
+#       - build:
+#           requires:
+#             - install
+#             - test
+#       - upload-to-artifactory:
+#           context: frontend-deploy-app
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               only: master
+#       - upload-sourcemaps:
+#           requires:
+#             - upload-to-artifactory
+#           filters:
+#             branches:
+#               only:
+#                 - master
