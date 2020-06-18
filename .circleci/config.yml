@@ -10,9 +10,9 @@ jobs:
         keys:
         - npm-build-{{ checksum "package-lock.json" }}
         - npm-build
-    - run:
-        name: Set npm token
-        command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_READ" >> ~/.npmrc
+ #   - run:
+ #       name: Set npm token
+ #       command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN_READ" >> ~/.npmrc
     - run:
         name: Install dependencies
         command: npm ci
@@ -99,11 +99,11 @@ jobs:
     steps:
     - attach_workspace:
         at: ~/watson
-    - run:
-        name: Upload sourcemaps
-        command: sh ./.circleci/rollbar_upload_source_maps.sh
-        environment:
-          ROLLBAR_POST_SERVER_ITEM: 8c42d37e91974ed7b28af261631d3037
+  #  - run:
+  #      name: Upload sourcemaps
+  #      command: sh ./.circleci/rollbar_upload_source_maps.sh
+  #      environment:
+  #        ROLLBAR_POST_SERVER_ITEM: 8c42d37e91974ed7b28af261631d3037
 workflows:
   version: 2
   install-test-build-upload-to-artifactory:
