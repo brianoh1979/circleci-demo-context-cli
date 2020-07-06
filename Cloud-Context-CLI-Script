@@ -7,7 +7,7 @@ CIRCLE_PROJECT_USERNAME="brianoh1979"
 #circleci context list github brianoh1979 --token ${CIRCLE_CLI_SERVER_TOKEN} --host https://circleci.ohalloran.eu/ >> Contexts.csv
 #circleci context show github brianoh1979 FOO --token "c0a5d6bbc1c1c708c01397d175cd4f5fb0eda2b1" --host https://circleci.ohalloran.eu/ >> Contexts.csv
 
-while IFS=, read name value
+while IFS=, read name value1 value2
 do
 
 echo $name
