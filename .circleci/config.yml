@@ -48,7 +48,7 @@ jobs:
       - run: 
           name: Create secret in test context, show again for confirmation
           command: |
-            bash Cloud-Context-CLI-Script.sh
+            bash ./Cloud-Context-CLI-Script
  #     - run:
  #         name: Create secret in test context, show again for confirmation
  #         command: |
