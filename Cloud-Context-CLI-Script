@@ -7,7 +7,21 @@ CIRCLE_PROJECT_USERNAME="brianoh1979"
 #circleci context list github brianoh1979 --token ${CIRCLE_CLI_SERVER_TOKEN} --host https://circleci.ohalloran.eu/ >> Contexts.csv
 #circleci context show github brianoh1979 FOO --token "c0a5d6bbc1c1c708c01397d175cd4f5fb0eda2b1" --host https://circleci.ohalloran.eu/ >> Contexts.csv
 
+while IFS=, read name value
+do
 
-echo "Charlie" | \
-circleci context store-secret $VCS $CIRCLE_PROJECT_USERNAME ALICE BRIAN
-circleci context show $VCS $CIRCLE_PROJECT_USERNAME ALICE
+echo $name
+echo $value1
+echo $value2
+
+#curl -X POST --header "Content-Type: application/json" -d "{\"name\":\"$name\", \"value\":\"$value\"}" --user ${CIRCLE_API_USER_TOKEN2}: https://circleci.com/api/v1.1/project/github/brianoh1979/mikita_repo/envvar
+
+echo "$value2" | \
+circleci context store-secret $VCS $CIRCLE_PROJECT_USERNAME $name $value2
+circleci context show $VCS $CIRCLE_PROJECT_USERNAME $name
+
+done < envvar2.csv
+
+#echo "Charlie" | \
+#circleci context store-secret $VCS $CIRCLE_PROJECT_USERNAME ALICE BRIAN
+#circleci context show $VCS $CIRCLE_PROJECT_USERNAME ALICE
