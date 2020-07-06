@@ -38,12 +38,12 @@ jobs:
       - run:
           name: Create test context, show again for confirmation
           command: |
-            circleci context create $VCS $CIRCLE_PROJECT_USERNAME FOO
+            circleci context create $VCS $CIRCLE_PROJECT_USERNAME ALICE
             circleci context list $VCS $CIRCLE_PROJECT_USERNAME
       - run:
           name: Show vars in context, should be empty
           command: |
-            circleci context show $VCS $CIRCLE_PROJECT_USERNAME FOO
+            circleci context show $VCS $CIRCLE_PROJECT_USERNAME ALICE
       - run: 
           name: Create secret in test context, show again for confirmation
           command: |
