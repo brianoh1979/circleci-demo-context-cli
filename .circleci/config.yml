@@ -25,6 +25,7 @@ jobs:
         environment:
           VCS: github
     steps:
+      - checkout
       - circleci-cli/install # Installs latest CLI
       - circleci-cli/setup
       - run:
