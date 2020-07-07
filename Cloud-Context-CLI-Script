@@ -10,7 +10,8 @@ echo $name
 echo $value1
 echo $value2
 
-
+circleci context create $VCS $CIRCLE_PROJECT_USERNAME $name
+circleci context show $VCS $CIRCLE_PROJECT_USERNAME $name
 echo $value2 | \
 circleci context store-secret $VCS $CIRCLE_PROJECT_USERNAME $name $value1
 circleci context show $VCS $CIRCLE_PROJECT_USERNAME $name
