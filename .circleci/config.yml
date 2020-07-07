@@ -51,6 +51,10 @@ jobs:
           name: Create test context along with secret in test context, show again for confirmation
           command: |
             bash ./Cloud-Context-CLI-Script
+      - run:
+          name: List current contexts following running of script
+          command: |
+            circleci context list $VCS $CIRCLE_PROJECT_USERNAME
  #     - run:
  #         name: Create secret in test context, show again for confirmation
  #         command: |
