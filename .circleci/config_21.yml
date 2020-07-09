@@ -1,0 +1,75 @@
+#Putting in a comment to trigger new commit
+#############
+# Common Defs
+#############
+version: 2.1
+orbs:
+  circleci-cli: circleci/circleci-cli@0.1.7
+
+############
+# Workflows
+############
+workflows:
+  version: 2
+  example:
+    jobs:
+      - context-cli-test
+
+##################
+# Job Definitions
+##################
+jobs:
+  context-cli-test:
+    docker:
+      - image: cimg/base:stable
+        environment:
+          VCS: github
+    steps:
+      - checkout
+      - circleci-cli/install # Installs latest CLI
+      - circleci-cli/setup
+      - run:
+          name: Check other required vars set
+          command: |
+            [ -z $VCS ] && exit 1 || echo "VCS set, continuing"
+      - run:
+          name: List current contexts
+          command: |
+            circleci context list $VCS $CIRCLE_PROJECT_USERNAME
+ #     - run:
+ #         name: Create test context, show again for confirmation
+ #         command: |
+ #           circleci context create $VCS $CIRCLE_PROJECT_USERNAME ALICE
+ #           circleci context create $VCS $CIRCLE_PROJECT_USERNAME FOO
+ #           circleci context list $VCS $CIRCLE_PROJECT_USERNAME
+ #     - run:
+ #         name: Show vars in context, should be empty
+ #         command: |
+ #           circleci context show $VCS $CIRCLE_PROJECT_USERNAME ALICE
+ #           circleci context show $VCS $CIRCLE_PROJECT_USERNAME FOO
+      - run: 
+          name: Create test context along with secret in test context, show again for confirmation
+          command: |
+            bash ./Cloud-Context-CLI-Script
+      - run:
+          name: List current contexts following running of script
+          command: |
+            circleci context list $VCS $CIRCLE_PROJECT_USERNAME
+ #     - run:
+ #         name: Create secret in test context, show again for confirmation
+ #         command: |
+ #           echo "HelloWorld!" | \
+ #           circleci context store-secret $VCS $CIRCLE_PROJECT_USERNAME FOO BAR
+
+ #           circleci context show $VCS $CIRCLE_PROJECT_USERNAME FOO
+#      - run:
+#          name: Remove the secret from the context, show context again to confirm
+#          command: |
+#            circleci context remove-secret $VCS $CIRCLE_PROJECT_USERNAME test-context2 TEST_SECRET
+#            circleci context show $VCS $CIRCLE_PROJECT_USERNAME test-context2
+ #     - run:
+ #         name: Delete test context, show again to confirm
+ #         command: |
+ #           circleci context delete -f $VCS $CIRCLE_PROJECT_USERNAME test-context2
+ #           circleci context list $VCS $CIRCLE_PROJECT_USERNAME
+ #         when: always
