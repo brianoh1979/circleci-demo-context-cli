@@ -3,7 +3,7 @@
 VCS="github"
 CIRCLE_PROJECT_USERNAME="brianoh1979"
 
-base64 --decode encoded-envvar2.csv > envvar2.csv
+#base64 --decode encoded-envvar2.csv > envvar2.csv
 while IFS=, read name value1 value2
 do
 
