@@ -44,8 +44,8 @@ jobs:
     - run:
         command: |
           circleci setup --no-prompt \
-            --host https://circleci.com \
-#            --token $CIRCLECI_CLI_TOKEN_CLOUD
+            --host https://circleci.ohalloran.eu \
+            --token $CIRCLECI_CLI_TOKEN
         name: Configure CircleCI CLI
     - run:
         name: Check other required vars set
