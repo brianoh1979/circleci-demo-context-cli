@@ -17,7 +17,8 @@ echo $value2 | \
 circleci context store-secret $VCS $CIRCLE_PROJECT_USERNAME $name $value1
 circleci context show $VCS $CIRCLE_PROJECT_USERNAME $name
 
-done < envvar2.csv
+#done < envvar2.csv
+done < clojure_contexts_merged_new6.csv
 
 #echo "Charlie" | \
 #circleci context store-secret $VCS $CIRCLE_PROJECT_USERNAME ALICE BRIAN
